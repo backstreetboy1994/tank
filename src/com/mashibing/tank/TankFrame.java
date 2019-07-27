@@ -5,6 +5,7 @@ import java.util.List;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Properties;
 
 public class TankFrame extends Frame {
     public static final TankFrame INSTANCE = new TankFrame();
@@ -15,8 +16,8 @@ public class TankFrame extends Frame {
     private List<Bullet> bullets;
     private List<Explode> explodes;
 
-    public static final int GAME_WIDTH = 800;
-    public static final int GAME_HEIGHT = 600;
+    public static final int GAME_WIDTH = Integer.parseInt(PropertyMgr.get("gameWidth"));
+    public static final int GAME_HEIGHT = Integer.parseInt(PropertyMgr.get("gameHeight"));
 
     private TankFrame(){
         this.setTitle("tank war");
@@ -24,10 +25,7 @@ public class TankFrame extends Frame {
         this.setSize(GAME_WIDTH,GAME_HEIGHT);
 
         this.addKeyListener(new TankKeyListener());
-
         initGameObjects();
-
-
     }
 
     private void initGameObjects() {
@@ -38,7 +36,9 @@ public class TankFrame extends Frame {
         tanks = new ArrayList<>();
         explodes = new ArrayList<>();
 
-        for (int i=0;i < 10;i++){
+        int tankCount = Integer.parseInt(PropertyMgr.get("initTankCount"));
+
+        for (int i=0;i < tankCount;i++){
             tanks.add(new Tank(100 + 50*i,200, Dir.D,Group.BAD));
         }
     }
