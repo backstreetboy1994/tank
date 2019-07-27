@@ -1,5 +1,9 @@
 #key-value pair
 #等号不能加空格
-initTankCount=50
-gameWidth=600
-gameHeight=480
+initTankCount=10
+gameWidth=800
+gameHeight=600
+
+#tank fire strategy
+tankFireStrategy=DefaultFireStrategy
+colliders=BulletTankCollider,BulletWallCollider,TankWallCollider

@@ -3,7 +3,7 @@ package com.mashibing.tank;
 import java.awt.*;
 import java.util.Random;
 
-public class Tank {
+public class Tank extends AbstractGameObject {
     private int x, y;
     private Dir dir;
     private boolean moving = true;
@@ -12,6 +12,7 @@ public class Tank {
     private int height, width;
 
     private int oldX, oldY;
+    private Rectangle rect;
 
     public static final int SPEED = 1;
 
@@ -24,6 +25,8 @@ public class Tank {
         this.group = group;
         this.height = ResourceMgr.bulletU.getHeight();
         this.width = ResourceMgr.bulletU.getWidth();
+
+        this.rect = new Rectangle(x, y, width, height);
     }
 
     public boolean isLive() { return live; }
@@ -54,6 +57,8 @@ public class Tank {
         }
 
         move();
+        rect.x = x;
+        rect.y = y;
     }
 
     private void move() {
@@ -87,6 +92,11 @@ public class Tank {
             this.dir = Dir.randomDir();
     }
 
+    public void back(){
+        this.x = oldX;
+        this.y = oldY;
+    }
+
     private void fire() {
         int bX = x + ResourceMgr.goodTankU.getWidth()/2 - ResourceMgr.bulletU.getWidth()/2;
         int bY = y + ResourceMgr.goodTankU.getHeight()/2 - ResourceMgr.bulletU.getHeight()/2;
@@ -96,14 +106,21 @@ public class Tank {
 
     private void boundsCheck() {
         if (x < 0 || y < 30 || x + width > TankFrame.GAME_WIDTH || y + height > TankFrame.GAME_HEIGHT) {
-            this.x = oldX;
-            this.y = oldY;
+            this.back();
         }
     }
 
     public void die() {
         this.setLive(false);
         TankFrame.INSTANCE.add(new Explode(x,y));
+    }
+
+    public Rectangle getRect() {
+        return rect;
+    }
+
+    public void setRect(Rectangle rect) {
+        this.rect = rect;
     }
 
     public Group getGroup() {

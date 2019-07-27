@@ -2,17 +2,29 @@ package com.mashibing.tank;
 
 import java.awt.*;
 
-public class Bullet {
+public class Bullet extends AbstractGameObject {
     public static final int SPEED = 1;
     private int x, y;
     private Dir dir;
     private boolean live = true;
     private Group group;
+    private Rectangle rect;
+    private int w = ResourceMgr.bulletU.getWidth();
+    private int h = ResourceMgr.bulletU.getHeight();
 
     public Bullet(int x, int y, Dir dir, Group group) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.group = group;
+        this.rect = new Rectangle(x,y,w,h);
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
         this.group = group;
     }
 
@@ -40,6 +52,8 @@ public class Bullet {
                 break;
         }
         move();
+        rect.x = x;
+        rect.y = y;
     }
 
     private void move() {
@@ -61,18 +75,11 @@ public class Bullet {
     }
 
     public void collidesWithTank(Tank tank) {
-        //如果坦克死了就不撞了
-        if (!tank.isLive() || !this.isLive()) return;
-        //如果是自己的子弹，不撞
-        if (this.group == tank.getGroup()) return;
 
-        Rectangle rect = new Rectangle(x, y, ResourceMgr.bulletU.getWidth(), ResourceMgr.bulletU.getHeight());
-        Rectangle rectTank = new Rectangle(tank.getX(), tank.getY(), ResourceMgr.goodTankU.getWidth(), ResourceMgr.goodTankU.getHeight());
+    }
 
-        if (rect.intersects(rectTank)){
-            this.setLive(false);
-            tank.die();
-        }
+    public Rectangle getRect(){
+        return rect;
     }
 
     private void boundsCheck() {
