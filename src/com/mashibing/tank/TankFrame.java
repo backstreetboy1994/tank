@@ -5,6 +5,7 @@ import com.mashibing.tank.chainofresponsibility.BulletWallCollider;
 import com.mashibing.tank.chainofresponsibility.Collider;
 import com.mashibing.tank.chainofresponsibility.ColliderChain;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -59,11 +60,48 @@ public class TankFrame extends Frame {
     private class TankKeyListener extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
+            int key = e.getKeyCode();
+            if (key == KeyEvent.VK_S)
+                save();
+            else if (key == KeyEvent.VK_L)
+                load();
             gm.getMyTank().keyPressed(e);
         }
 
         @Override
         public void keyReleased(KeyEvent e) { gm.getMyTank().keyReleased(e); }
+    }
+
+    private void load() {
+        try{
+            File f = new File("E:/files/tank.dat");
+            FileInputStream fis = new FileInputStream(f);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            this.gm = (GameModel)(ois.readObject());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void save() {
+        ObjectOutputStream oos = null;
+        try {
+            File f = new File("E:/files/tank.dat");
+            FileOutputStream fos = new FileOutputStream(f);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(gm);
+            oos.flush();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            try{
+                if (oos != null)
+                    oos.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     public GameModel getGm(){
