@@ -1,6 +1,6 @@
 #key-value pair
 #等号不能加空格
-initTankCount=5
+initTankCount=0
 gameWidth=800
 gameHeight=600
 

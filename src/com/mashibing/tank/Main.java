@@ -1,5 +1,7 @@
 package com.mashibing.tank;
 
+import net.Client;
+
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -7,14 +9,19 @@ public class Main {
         TankFrame.INSTANCE.setVisible(true);
 
         new Thread(()->new Audio("audio/war1.wav").loop()).start();
-        for (; ; ){
-            try {
-                TimeUnit.MICROSECONDS.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+        new Thread(() -> {
+            for (; ; ){
+                try {
+                    TimeUnit.MICROSECONDS.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                //repaint()自动调用paint()方法
+                TankFrame.INSTANCE.repaint();
             }
-            //repaint()自动调用paint()方法
-            TankFrame.INSTANCE.repaint();
-        }
+        }).start();
+
+        Client.INSTANCE.connect();
     }
 }

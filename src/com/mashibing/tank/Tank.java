@@ -1,7 +1,10 @@
 package com.mashibing.tank;
 
+import net.TankJoinMsg;
+
 import java.awt.*;
 import java.util.Random;
+import java.util.UUID;
 
 public class Tank extends AbstractGameObject {
     private int x, y;
@@ -10,6 +13,7 @@ public class Tank extends AbstractGameObject {
     private boolean live = true;
     private Group group;
     private int height, width;
+    private UUID id;
 
     private int oldX, oldY;
     private Rectangle rect;
@@ -29,6 +33,25 @@ public class Tank extends AbstractGameObject {
         this.rect = new Rectangle(x, y, width, height);
     }
 
+    public Tank(TankJoinMsg msg) {
+        this.x = msg.getX();
+        this.y = msg.getY();
+        this.dir = msg.getDir();
+        this.group = msg.getGroup();
+        this.moving = msg.isMoving();
+        this.id = msg.getId();
+
+        this.rect = new Rectangle(x, y, width, height);
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public boolean isLive() { return live; }
 
     public void setLive(boolean live) { this.live = live; }
@@ -43,16 +66,16 @@ public class Tank extends AbstractGameObject {
 
         switch (dir){
             case L:
-                g.drawImage(ResourceMgr.badTankL, x, y,null);
+                g.drawImage(this.group.equals(Group.BAD)?ResourceMgr.badTankL:ResourceMgr.goodTankL, x, y,null);
                 break;
             case U:
-                g.drawImage(ResourceMgr.badTankU, x, y,null);
+                g.drawImage(this.group.equals(Group.BAD)?ResourceMgr.badTankU:ResourceMgr.goodTankU, x, y,null);
                 break;
             case R:
-                g.drawImage(ResourceMgr.badTankR, x, y,null);
+                g.drawImage(this.group.equals(Group.BAD)?ResourceMgr.badTankR:ResourceMgr.goodTankR, x, y,null);
                 break;
             case D:
-                g.drawImage(ResourceMgr.badTankD, x, y,null);
+                g.drawImage(this.group.equals(Group.BAD)?ResourceMgr.badTankD:ResourceMgr.goodTankD, x, y,null);
                 break;
         }
 
