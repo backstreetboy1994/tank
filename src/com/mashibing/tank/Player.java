@@ -1,8 +1,10 @@
 package com.mashibing.tank;
 
-import com.mashibing.tank.strategy.DefaultFireStrategy;
+import com.mashibing.tank.net.BulletNewMsg;
+import com.mashibing.tank.net.Client;
+import com.mashibing.tank.net.TankMoveOrDirChangeMsg;
+import com.mashibing.tank.net.TankStopMsg;
 import com.mashibing.tank.strategy.FireStrategy;
-import com.mashibing.tank.strategy.FourDirFireStrategy;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -98,9 +100,13 @@ public class Player extends AbstractGameObject {
     }
 
     private void setMainDir() {
+        boolean oldMoving = moving;
+        Dir oldDir = this.getDir();
         //all dir keys are released, tank should be stop
-        if (!bL && !bU && !bR && !bD)
+        if (!bL && !bU && !bR && !bD) {
             moving = false;
+            Client.INSTANCE.send(new TankStopMsg(this.id, this.x, this.y));
+        }
             //any dir key is pressed, tank should be moving
         else {
             moving = true;
@@ -112,6 +118,11 @@ public class Player extends AbstractGameObject {
                 dir = Dir.R;
             if (!bL && !bU && !bR && bD)
                 dir = Dir.D;
+            //old status is not moving, now tank will move imediate
+            if (!oldMoving)
+                Client.INSTANCE.send(new TankMoveOrDirChangeMsg(this.id, this.x, this.y, this.dir));
+            if (!oldDir.equals(this.dir))
+                Client.INSTANCE.send(new TankMoveOrDirChangeMsg(this.id, this.x, this.y, this.dir));
         }
     }
 
@@ -170,10 +181,11 @@ public class Player extends AbstractGameObject {
 
     private void fire() {
         strategy.fire(this);
-    }
+}
 
     public void die() {
         this.setLive(false);
+        TankFrame.INSTANCE.getGm().add(new Explode(x,y));
     }
 
     public Dir getDir() {
