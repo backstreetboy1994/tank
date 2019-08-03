@@ -1,6 +1,7 @@
 package com.mashibing.tank;
 
 import java.awt.*;
+import java.util.UUID;
 
 public class Bullet extends AbstractGameObject {
     public static final int SPEED = 1;
@@ -9,15 +10,46 @@ public class Bullet extends AbstractGameObject {
     private boolean live = true;
     private Group group;
     private Rectangle rect;
+    private UUID id = UUID.randomUUID();
+    private UUID playerId;
     private int w = ResourceMgr.bulletU.getWidth();
     private int h = ResourceMgr.bulletU.getHeight();
 
-    public Bullet(int x, int y, Dir dir, Group group) {
+    public Bullet(int x, int y, Dir dir, Group group, UUID playerId) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
+        this.playerId = playerId;
         this.rect = new Rectangle(x,y,w,h);
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public Dir getDir() {
+        return dir;
+    }
+
+    public void setDir(Dir dir) {
+        this.dir = dir;
     }
 
     public Group getGroup() {
@@ -86,5 +118,13 @@ public class Bullet extends AbstractGameObject {
 
     public void die(){
         this.setLive(false);
+    }
+
+    public UUID getId() {
+        return this.id;
+    }
+
+    public UUID getPlayerId() {
+        return this.playerId;
     }
 }

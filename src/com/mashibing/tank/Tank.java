@@ -1,6 +1,6 @@
 package com.mashibing.tank;
 
-import net.TankJoinMsg;
+import com.mashibing.tank.net.TankJoinMsg;
 
 import java.awt.*;
 import java.util.Random;
@@ -42,6 +42,22 @@ public class Tank extends AbstractGameObject {
         this.id = msg.getId();
 
         this.rect = new Rectangle(x, y, width, height);
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setDir(Dir dir) {
+        this.dir = dir;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
     }
 
     public UUID getId() {
@@ -104,9 +120,9 @@ public class Tank extends AbstractGameObject {
         }
 
         boundsCheck();
-        randomDir();
-        if (r.nextInt(500) > 490)
-            fire();
+//        randomDir();
+//        if (r.nextInt(500) > 490)
+//            fire();
     }
 
     private Random r = new Random();
@@ -124,7 +140,7 @@ public class Tank extends AbstractGameObject {
         int bX = x + ResourceMgr.goodTankU.getWidth()/2 - ResourceMgr.bulletU.getWidth()/2;
         int bY = y + ResourceMgr.goodTankU.getHeight()/2 - ResourceMgr.bulletU.getHeight()/2;
 
-        TankFrame.INSTANCE.getGm().add(new Bullet(bX,bY,dir,group));
+        TankFrame.INSTANCE.getGm().add(new Bullet(bX,bY,dir,group, this.id));
     }
 
     private void boundsCheck() {
@@ -136,6 +152,7 @@ public class Tank extends AbstractGameObject {
     public void die() {
         this.setLive(false);
         TankFrame.INSTANCE.getGm().add(new Explode(x,y));
+
     }
 
     public Rectangle getRect() {

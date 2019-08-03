@@ -1,6 +1,6 @@
 package com.mashibing.tank;
 
-import net.Client;
+import com.mashibing.tank.net.Client;
 
 import java.util.concurrent.TimeUnit;
 
@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args){
         TankFrame.INSTANCE.setVisible(true);
 
-        new Thread(()->new Audio("audio/war1.wav").loop()).start();
+//        new Thread(()->new Audio("audio/war1.wav").loop()).start();
 
         new Thread(() -> {
             for (; ; ){

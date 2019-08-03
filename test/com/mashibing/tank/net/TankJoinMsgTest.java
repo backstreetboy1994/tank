@@ -6,18 +6,13 @@ import com.mashibing.tank.Player;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
-import net.MsgDecoder;
-import net.MsgEncoder;
-import net.TankJoinMsg;
-import nettycodec.TankMsg;
-import nettycodec.TankMsgEncoder;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MsgEncoderTest {
+class TankJoinMsgTest {
 
     @Test
     void encode() {
@@ -32,6 +27,7 @@ class MsgEncoderTest {
 
         ByteBuf buf = ch.readOutbound();
 
+        MsgType msgType = MsgType.values()[buf.readInt()];
         int length = buf.readInt();
 
         int x = buf.readInt();
@@ -41,6 +37,7 @@ class MsgEncoderTest {
         Group group = Group.values()[buf.readInt()];
         UUID id = new UUID(buf.readLong(), buf.readLong());
 
+        assertEquals(MsgType.TankJoin,msgType);
         assertEquals(33,length);
         assertEquals(50,x);
         assertEquals(100,y);
@@ -60,6 +57,7 @@ class MsgEncoderTest {
         UUID id = UUID.randomUUID();
 
         ByteBuf buf = Unpooled.buffer();
+        buf.writeInt(MsgType.TankJoin.ordinal());
         buf.writeInt(33);
         buf.writeInt(5);
         buf.writeInt(8);

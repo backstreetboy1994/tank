@@ -1,18 +1,11 @@
-package net;
+package com.mashibing.tank.net;
 
-import com.mashibing.tank.GameModel;
 import com.mashibing.tank.TankFrame;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.ReferenceCountUtil;
-import nettychat.ClientFrame;
-import nettycodec.TankMsg;
-import nettycodec.TankMsgEncoder;
 
 public class Client {
     public static final Client INSTANCE = new Client();
@@ -57,7 +50,7 @@ public class Client {
         }
     }
 
-    public void send(TankJoinMsg msg) {
+    public void send(Msg msg) {
         channel.writeAndFlush(msg);
     }
 
@@ -65,16 +58,16 @@ public class Client {
         channel.close();
     }
 
-    static class MyHandler extends SimpleChannelInboundHandler<TankJoinMsg> {
+    static class MyHandler extends SimpleChannelInboundHandler<Msg> {
         @Override
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
             ctx.writeAndFlush(new TankJoinMsg(TankFrame.INSTANCE.getGm().getMyTank()));
         }
 
         @Override
-        protected void channelRead0(ChannelHandlerContext ctx, TankJoinMsg msg) throws Exception {
+        protected void channelRead0(ChannelHandlerContext ctx, Msg msg) throws Exception {
             System.out.println(msg);
-            msg.handler();
+            msg.handle();
         }
 
         @Override

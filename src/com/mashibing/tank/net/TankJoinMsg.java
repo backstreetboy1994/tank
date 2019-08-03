@@ -1,12 +1,11 @@
-package net;
+package com.mashibing.tank.net;
 
 import com.mashibing.tank.*;
 
 import java.io.*;
 import java.util.UUID;
 
-public class
-TankJoinMsg {
+public class TankJoinMsg extends Msg {
     private int x, y;
     private Dir dir;
     private boolean moving;
@@ -144,7 +143,7 @@ TankJoinMsg {
                 '}';
     }
 
-    public void handler() {
+    public void handle() {
         //if this msg`s id equals my tank`s id ,return
         //otherwise add new tank to my collection
         if (this.id.equals(TankFrame.INSTANCE.getGm().getMyTank().getId())) return;
@@ -153,5 +152,11 @@ TankJoinMsg {
         Tank t = new Tank(this);
         TankFrame.INSTANCE.getGm().add(t);
         Client.INSTANCE.send(new TankJoinMsg(TankFrame.INSTANCE.getGm().getMyTank()));
+    }
+
+
+    @Override
+    public MsgType getMsgType() {
+        return MsgType.TankJoin;
     }
 }

@@ -1,4 +1,4 @@
-package net;
+package com.mashibing.tank.net;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
